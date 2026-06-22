@@ -44,7 +44,12 @@ namespace Baufflaechenverwaltung
 
         public void FlaecheReservieren()
         {
-            Status = FlaechenStatus.Reserviert;
+            if (Status == FlaechenStatus.Frei)
+            {
+                Status = FlaechenStatus.Reserviert;
+            } else {
+                Console.WriteLine($"Fläche {FlurstueckNummer} kann nicht reserviert werden, aktueller Status: {Status}");
+            }
         }
     }
 
