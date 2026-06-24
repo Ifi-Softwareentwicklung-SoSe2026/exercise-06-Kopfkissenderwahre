@@ -82,11 +82,11 @@ public class Persistencemanager
             var json = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(filepath, json);
         }
-        public List<object> loadFromJson(string filepath, Type type)
+        public List<object> loadFromJson(string filepath)
         {
             string json = File.ReadAllText(filepath);
-            var obj = JsonSerializer.Deserialize(json, type);
-            return new List<object> { obj };
+            var obj = JsonSerializer.Deserialize(json);
+            return obj;
         }
     }
     class Program
@@ -123,6 +123,8 @@ public class Persistencemanager
             };
             vorhaben.ZugeordneteFlaechen.Add(flaeche1);
             manager.saveToJson("bauvorhaben.json", vorhaben);
+            manager.loadFromJson("bauflaeche.json");
+            manager.loadFromJson("bauvorhaben.json");
             flaeche1.FlaecheReservieren();
             vorhaben.StatusAktualisieren(BauvorhabenStatus.Genehmigt);
 
