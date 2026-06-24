@@ -88,7 +88,7 @@ public class Persistencemanager
             var obj = JsonSerializer.Deserialize<Bauflaeche>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             return new List<Bauflaeche> { obj };
         }
-        public List<Bauvorhaben> loadFromJsonbauvorhaben(string filepath)
+        public List<Bauvorhaben> loadFromJsonBauvorhaben(string filepath)
         {
             string json = File.ReadAllText(filepath);
             var obj = JsonSerializer.Deserialize<Bauvorhaben>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -130,7 +130,7 @@ public class Persistencemanager
             vorhaben.ZugeordneteFlaechen.Add(flaeche1);
             manager.saveToJson("bauvorhaben.json", vorhaben);
             List<Bauflaeche> geladeneFlaechen = manager.loadFromJsonBauflaeche("bauflaeche.json");
-            List<Bauvorhaben> geladeneVorhaben = manager.loadFromJsonbauvorhaben("bauvorhaben.json");
+            List<Bauvorhaben> geladeneVorhaben = manager.loadFromJsonBauvorhaben("bauvorhaben.json");
             Console.WriteLine($"Geladene Fläche: {geladeneFlaechen.Count} Einträge");
             Console.WriteLine($"Geladene Bauvorhaben: {geladeneVorhaben.Count} Einträge");
             flaeche1.FlaecheReservieren();
