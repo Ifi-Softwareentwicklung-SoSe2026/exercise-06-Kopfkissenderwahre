@@ -123,8 +123,10 @@ public class Persistencemanager
             };
             vorhaben.ZugeordneteFlaechen.Add(flaeche1);
             manager.saveToJson("bauvorhaben.json", vorhaben);
-            manager.loadFromJson("bauflaeche.json");
-            manager.loadFromJson("bauvorhaben.json");
+            List<object> geladeneFlaechen = manager.loadFromJson("bauflaeche.json");
+            List<object> geladeneVorhaben = manager.loadFromJson("bauvorhaben.json");
+            Console.WriteLine($"Geladene Fläche: {geladeneFlaechen.Count} Einträge");
+            Console.WriteLine($"Geladene Bauvorhaben: {geladeneVorhaben.Count} Einträge");
             flaeche1.FlaecheReservieren();
             vorhaben.StatusAktualisieren(BauvorhabenStatus.Genehmigt);
 
