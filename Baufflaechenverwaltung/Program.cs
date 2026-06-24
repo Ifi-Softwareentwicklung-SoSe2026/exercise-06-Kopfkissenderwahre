@@ -77,16 +77,16 @@ namespace Baufflaechenverwaltung
     }
 public class Persistencemanager
     {
-        public void saveToJson(string filepath)
+        public void saveToJson(string filepath, object obj)
         {
-            var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(filepath, json);
-
         }
         public void loadFromJson(string filepath)
         {
             string json = File.ReadAllText(filepath);
-            var obj = JsonSerializer.Deserialize<Persistencemanager>(json);
+            Console.WriteLine($"Loaded JSON from {filepath}:");
+            Console.WriteLine(json);
         }
     }
     class Program
@@ -106,7 +106,7 @@ public class Persistencemanager
                 Bodenrichtwert = 500m,
                 Eigentuemer = "Max Mustermann"
             };
-            manager.saveToJson("bauflaeche.json");
+            manager.saveToJson("bauflaeche.json", flaeche1);
             var grundstueck = new Grundstueck
             {
                 Bezeichnung = "Grundstück Nord 1",
@@ -122,7 +122,7 @@ public class Persistencemanager
                 Fertigstellung = DateTime.Now.AddMonths(12)
             };
             vorhaben.ZugeordneteFlaechen.Add(flaeche1);
-            manager.saveToJson("bauvorhaben.json");
+            manager.saveToJson("bauvorhaben.json", vorhaben);
             flaeche1.FlaecheReservieren();
             vorhaben.StatusAktualisieren(BauvorhabenStatus.Genehmigt);
 
