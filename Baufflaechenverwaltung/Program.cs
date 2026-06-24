@@ -85,8 +85,8 @@ public class Persistencemanager
         public List<object> loadFromJson(string filepath)
         {
             string json = File.ReadAllText(filepath);
-            var obj = JsonSerializer.Deserialize(json);
-            return obj;
+            var obj = JsonSerializer.Deserialize<object>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return (List<object>)(obj ?? new List<object>());
         }
     }
     class Program
