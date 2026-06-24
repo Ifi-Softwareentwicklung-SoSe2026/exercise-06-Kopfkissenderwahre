@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Baufflaechenverwaltung
 {
@@ -75,14 +76,14 @@ namespace Baufflaechenverwaltung
         }
         public void saveToJson(string filepath)
         {
-            var json = JsonSerializer.Serialize(this.Bauvorhaben, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(filepath, json);
 
         }
         public void loadFromJson(string filepath)
         {
             string json = File.ReadAllText(filepath);
-            this.Bauvorhaben = JsonSerializer.Deserialize<Bauvorhaben>(json) ?? throw new InvalidDataException($"JSON-Datei konnte nicht gelesen werden: {filepath}");
+            this = JsonSerializer.Deserialize<Bauvorhaben>(json) ?? throw new InvalidDataException($"JSON-Datei konnte nicht gelesen werden: {filepath}");
         }
     }
 
@@ -102,7 +103,7 @@ namespace Baufflaechenverwaltung
                 Bodenrichtwert = 500m,
                 Eigentuemer = "Max Mustermann"
             };
-            SaveToJson("bauflaeche.json", flaeche1);
+            flaeche1.saveToJson("bauflaeche.json");
             var grundstueck = new Grundstueck
             {
                 Bezeichnung = "Grundstück Nord 1",
@@ -118,8 +119,7 @@ namespace Baufflaechenverwaltung
                 Fertigstellung = DateTime.Now.AddMonths(12)
             };
             vorhaben.ZugeordneteFlaechen.Add(flaeche1);
-            saveToJson("bauvorhaben.json", vorhaben);
-
+            vorhaben.saveToJson("bauvorhaben.json");
             flaeche1.FlaecheReservieren();
             vorhaben.StatusAktualisieren(BauvorhabenStatus.Genehmigt);
 
