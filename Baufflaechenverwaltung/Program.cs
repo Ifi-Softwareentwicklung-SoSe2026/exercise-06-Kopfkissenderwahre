@@ -82,11 +82,17 @@ public class Persistencemanager
             var json = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(filepath, json);
         }
-        public List<object> loadFromJson(string filepath)
+        public List<Bauflaeche> loadFromJsonBauflaeche(string filepath)
         {
             string json = File.ReadAllText(filepath);
-            var obj = JsonSerializer.Deserialize<object>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            return (List<object>)(obj ?? new List<object>());
+            var obj = JsonSerializer.Deserialize<Bauflaeche>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return new List<Bauflaeche> { obj };
+        }
+        public List<Bauvorhaben> loadFromJsonbauvorhaben(string filepath)
+        {
+            string json = File.ReadAllText(filepath);
+            var obj = JsonSerializer.Deserialize<Bauvorhaben>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return new List<Bauvorhaben> { obj };
         }
     }
     class Program
@@ -123,8 +129,8 @@ public class Persistencemanager
             };
             vorhaben.ZugeordneteFlaechen.Add(flaeche1);
             manager.saveToJson("bauvorhaben.json", vorhaben);
-            List<object> geladeneFlaechen = manager.loadFromJson("bauflaeche.json");
-            List<object> geladeneVorhaben = manager.loadFromJson("bauvorhaben.json");
+            List<Bauflaeche> geladeneFlaechen = manager.loadFromJsonBauflaeche("bauflaeche.json");
+            List<Bauvorhaben> geladeneVorhaben = manager.loadFromJsonbauvorhaben("bauvorhaben.json");
             Console.WriteLine($"Geladene Fläche: {geladeneFlaechen.Count} Einträge");
             Console.WriteLine($"Geladene Bauvorhaben: {geladeneVorhaben.Count} Einträge");
             flaeche1.FlaecheReservieren();
