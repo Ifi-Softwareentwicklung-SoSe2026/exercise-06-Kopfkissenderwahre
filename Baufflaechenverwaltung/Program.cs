@@ -82,11 +82,10 @@ public class Persistencemanager
             var json = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(filepath, json);
         }
-        public void loadFromJson(string filepath)
+        public void loadFromJson(string filepath, Type type)
         {
             string json = File.ReadAllText(filepath);
-            Console.WriteLine($"Loaded JSON from {filepath}:");
-            Console.WriteLine(json);
+
         }
     }
     class Program
