@@ -87,16 +87,13 @@ public class Persistencemanager
         {
             string json = File.ReadAllText(filepath);
             var obj = JsonSerializer.Deserialize<Persistencemanager>(json);
-            if (obj != null)
-            {
-                this = obj;
-            }
         }
     }
     class Program
     {
         static void Main(string[] args)
         {
+            var manager = new Persistencemanager();
             // Demonstration der Funktionalität
             var flaeche1 = new Bauflaeche
             {
@@ -109,7 +106,7 @@ public class Persistencemanager
                 Bodenrichtwert = 500m,
                 Eigentuemer = "Max Mustermann"
             };
-            flaeche1.saveToJson("bauflaeche.json");
+            manager.saveToJson("bauflaeche.json");
             var grundstueck = new Grundstueck
             {
                 Bezeichnung = "Grundstück Nord 1",
@@ -125,7 +122,7 @@ public class Persistencemanager
                 Fertigstellung = DateTime.Now.AddMonths(12)
             };
             vorhaben.ZugeordneteFlaechen.Add(flaeche1);
-            vorhaben.saveToJson("bauvorhaben.json");
+            manager.saveToJson("bauvorhaben.json");
             flaeche1.FlaecheReservieren();
             vorhaben.StatusAktualisieren(BauvorhabenStatus.Genehmigt);
 
