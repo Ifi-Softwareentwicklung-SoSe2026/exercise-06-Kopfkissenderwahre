@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Baufflaechenverwaltung
 {
@@ -41,7 +42,6 @@ namespace Baufflaechenverwaltung
         public decimal Bodenrichtwert { get; set; }
         public string Eigentuemer { get; set; } = string.Empty;
         public FlaechenStatus Status { get; set; } = FlaechenStatus.Frei;
-
         public void FlaecheReservieren()
         {
             if (Status == FlaechenStatus.Frei)
@@ -73,12 +73,33 @@ namespace Baufflaechenverwaltung
         {
             Status = neuerStatus;
         }
-    }
 
+    }
+public class Persistencemanager
+    {
+        public void saveToJson(string filepath, object obj)
+        {
+            var json = JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(filepath, json);
+        }
+        public List<Bauflaeche> loadFromJsonBauflaeche(string filepath)
+        {
+            string json = File.ReadAllText(filepath);
+            var obj = JsonSerializer.Deserialize<Bauflaeche>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return new List<Bauflaeche> { obj };
+        }
+        public List<Bauvorhaben> loadFromJsonBauvorhaben(string filepath)
+        {
+            string json = File.ReadAllText(filepath);
+            var obj = JsonSerializer.Deserialize<Bauvorhaben>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return new List<Bauvorhaben> { obj };
+        }
+    }
     class Program
     {
         static void Main(string[] args)
         {
+            var manager = new Persistencemanager();
             // Demonstration der Funktionalität
             var flaeche1 = new Bauflaeche
             {
@@ -91,7 +112,7 @@ namespace Baufflaechenverwaltung
                 Bodenrichtwert = 500m,
                 Eigentuemer = "Max Mustermann"
             };
-
+            manager.saveToJson("bauflaeche.json", flaeche1);
             var grundstueck = new Grundstueck
             {
                 Bezeichnung = "Grundstück Nord 1",
@@ -107,7 +128,11 @@ namespace Baufflaechenverwaltung
                 Fertigstellung = DateTime.Now.AddMonths(12)
             };
             vorhaben.ZugeordneteFlaechen.Add(flaeche1);
-
+            manager.saveToJson("bauvorhaben.json", vorhaben);
+            List<Bauflaeche> geladeneFlaechen = manager.loadFromJsonBauflaeche("bauflaeche.json");
+            List<Bauvorhaben> geladeneVorhaben = manager.loadFromJsonBauvorhaben("bauvorhaben.json");
+            Console.WriteLine($"Geladene Fläche: {geladeneFlaechen.Count} Einträge");
+            Console.WriteLine($"Geladene Bauvorhaben: {geladeneVorhaben.Count} Einträge");
             flaeche1.FlaecheReservieren();
             vorhaben.StatusAktualisieren(BauvorhabenStatus.Genehmigt);
 
