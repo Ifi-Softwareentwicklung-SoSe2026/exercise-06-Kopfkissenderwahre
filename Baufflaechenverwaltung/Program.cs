@@ -85,7 +85,7 @@ public class Persistencemanager
         public void loadFromJson(string filepath, Type type)
         {
             string json = File.ReadAllText(filepath);
-
+            var obj = JsonSerializer.Deserialize(json, type);
         }
     }
     class Program
