@@ -42,7 +42,12 @@ namespace Baufflaechenverwaltung
         public decimal Bodenrichtwert { get; set; }
         public string Eigentuemer { get; set; } = string.Empty;
         public FlaechenStatus Status { get; set; } = FlaechenStatus.Frei;
+        public void saveToJson(string filepath)
+        {
+            var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(filepath, json);
 
+        }
         public void FlaecheReservieren()
         {
             if (Status == FlaechenStatus.Frei)
@@ -83,7 +88,17 @@ namespace Baufflaechenverwaltung
         public void loadFromJson(string filepath)
         {
             string json = File.ReadAllText(filepath);
-            this = JsonSerializer.Deserialize<Bauvorhaben>(json) ?? throw new InvalidDataException($"JSON-Datei konnte nicht gelesen werden: {filepath}");
+            var loadedVorhaben = JsonSerializer.Deserialize<Bauvorhaben>(json);
+            if (loadedVorhaben != null)
+            {
+                this.Titel = loadedVorhaben.Titel;
+                this.Antragsteller = loadedVorhaben.Antragsteller;
+                this.GeplanteNutzung = loadedVorhaben.GeplanteNutzung;
+                this.Beginn = loadedVorhaben.Beginn;
+                this.Fertigstellung = loadedVorhaben.Fertigstellung;
+                this.Status = loadedVorhaben.Status;
+                this.ZugeordneteFlaechen = loadedVorhaben.ZugeordneteFlaechen;
+            }
         }
     }
 
